@@ -1,63 +1,39 @@
-import { StyleSheet, Text, View, textInput, Button, FlatList, TouchableOpacity } from 'react-native';
-import CustomModal from './components/Modal/'
-import AddItem from './components/AddItem'
-import List from './components/List'
-import {useState} from "react";
+import { StyleSheet, SafeAreaView, View } from 'react-native';
+import Header from './components/Header';
+import StartGameScreen from './pages/StartGameScreen';
+import { useState } from 'react';
+import { useFonts} from 'expo-font';
+import AppLoading from 'expo-app-loading';
 
 export default function App() {
+  const [userNumber, setUserNumber] = useState()
+  const [guessRounds, setGuessRounds ] = useState(0)
 
-  const [textItem, setTextItem] = useState('');
-  const [itemList, setItemList] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [itemSelected, setItemSelected] = useState({});
- 
-  const onHandlerChangeItem = (text) => setTextItem(text)
-  const onHandlerAddItem = () => {
-    setItemList(currentItems => [...currentItems, { id: Date.now(), value: textItem, completed: false}])
-    setTextItem('')
+  const [loaded] = useFonts({ EduBold: require('./assets/fonts/Edu-Bold.ttf') , EduRegular: require('./assets/fonts/Edu-Regular.ttf'), EduMedium: require('./assets/fonts/Edu-Medium.ttf'), EduSemiBold: require('./assets/fonts/Edu-SemiBold.ttf')})
+
+  const handlerStartGame = selectedNumber => {
+    setUserNumber(selectedNumber)
   }
 
-  const onHandlerDeleteItem = id => {
-    setItemList(currentItems => currentItems.filter(item => item.id !== id))
-    setItemSelected({})
-    setModalVisible(!modalVisible)
-  }
-  const onHandlerModal = id => {
-    setItemSelected(itemList.find(item => item.id === id))
-    setModalVisible(!modalVisible)
+  const handlerRestart = () => {
+    setGuessRounds(0)
+    setUserNumber(null)
   }
 
-  const onHandlerCompleteItem = id => {
-    let itemCompleted = itemList.findIndex((item) => item.id === id)
-    itemList[itemCompleted].completed = true
-    setItemList([...itemList])
-    setModalVisible(!modalVisible)
-  }
+  let content = <StartGameScreen onStartGame={handlerStartGame} />
+
+  if(!loaded) return <AppLoading />
 
   return (
-    <View style={styles.screen}>
-      <CustomModal 
-        modalVisible={modalVisible}
-        onHandlerDeleteItem={onHandlerDeleteItem}
-        itemSelected={itemSelected}
-        onHandlerCompleteItem={onHandlerCompleteItem}
-      /> 
-      <AddItem 
-        textItem={textItem}
-        onHandlerAddItem={onHandlerAddItem}
-        onHandlerChangeItem={onHandlerChangeItem}
-      />
-      <List 
-        itemList={itemList}
-        onHandlerModal={onHandlerModal}
-      />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Header title={'Adivina el numero'} />
+      {content}
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    marginTop: '10%',
-    padding: 30,
+  container: {
+    flex: 1,
   },
-})
+});
