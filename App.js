@@ -1,6 +1,7 @@
 import { StyleSheet, SafeAreaView, View } from 'react-native';
 import Header from './components/Header';
 import StartGameScreen from './pages/StartGameScreen';
+import GameScreen from './pages/GameScreen'
 import { useState } from 'react';
 import { useFonts} from 'expo-font';
 import AppLoading from 'expo-app-loading';
@@ -21,6 +22,10 @@ export default function App() {
   }
 
   let content = <StartGameScreen onStartGame={handlerStartGame} />
+
+  if (userNumber) {
+    content = <GameScreen />
+  }
 
   if(!loaded) return <AppLoading />
 

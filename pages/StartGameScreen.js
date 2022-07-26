@@ -25,6 +25,7 @@ const StartGameScreen = props => {
     const handlerConfirmInput = () => {
         let choseNumber = parseInt(enteredValue)
         if(choseNumber === NaN || choseNumber < 0 || choseNumber > 99 || choseNumber.length < 1) return;
+        
         setConfirmed(true);
         setSelectedNumber(parseInt(enteredValue))
         setEnteredValue('')

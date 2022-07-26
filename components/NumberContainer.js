@@ -26,3 +26,5 @@ const styles = StyleSheet.create({
         fontFamily: 'EduRegular',
     }
 })
+
+export default NumberContainer
